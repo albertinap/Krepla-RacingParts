@@ -4,6 +4,7 @@ import { Search, HelpCircle, User, ShoppingCart } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import Image from "next/image"
 import { useCart } from "@/contexts/cart-context"
 import { useAuth } from "@/contexts/auth-context"
 
@@ -15,16 +16,17 @@ export function Header() {
     <header className="bg-background border-b border-border py-4 px-4">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
         {/* Logo */}
+
         <Link href="/" className="flex-shrink-0">
-          <div className="flex flex-col">
-            <span className="text-2xl md:text-3xl font-bold tracking-tight text-foreground" style={{ fontFamily: 'var(--font-oswald)' }}>
-              KREPLA
-            </span>
-            <span className="text-primary text-xs md:text-sm italic -mt-1" style={{ fontFamily: 'var(--font-oswald)' }}>
-              Racing Parts
-            </span>
-          </div>
-        </Link>
+        <Image
+          src="/logo.png"
+          alt="Krepla Racing Parts"
+          width={150}
+          height={50}
+          className="object-contain"
+          priority
+        />
+      </Link>
 
         {/* Search Bar */}
         <div className="flex-1 max-w-2xl hidden sm:block">

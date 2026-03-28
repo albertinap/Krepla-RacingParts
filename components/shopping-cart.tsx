@@ -7,8 +7,9 @@ import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
-import { Sheet, SheetContent } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet"
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 
 const FREE_SHIPPING_THRESHOLD = 150000
 
@@ -30,16 +31,15 @@ export function ShoppingCart() {
   const progressToFreeShipping = Math.min((total / FREE_SHIPPING_THRESHOLD) * 100, 100)
   const amountForFreeShipping = Math.max(FREE_SHIPPING_THRESHOLD - total, 0)
   const discountedTotal = (total + shippingCost) * 0.84
+  const router = useRouter()
 
   return (
     <Sheet open={isOpen} onOpenChange={closeCart}>
       <SheetContent side="right" className="w-full sm:max-w-md p-0 flex flex-col bg-card">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-border">
-          <h2 className="text-lg font-semibold">Carrito de Compras</h2>
-          <Button variant="ghost" size="icon" onClick={closeCart}>
-            <X className="h-5 w-5" />
-          </Button>
+          <SheetTitle className="text-lg">Carrito de Compras</SheetTitle>
+          
         </div>
 
         {/* Cart Items */}
@@ -227,7 +227,10 @@ export function ShoppingCart() {
               </div>
             </div>
 
-            <Button className="w-full bg-foreground text-background hover:bg-foreground/90 font-semibold py-6">
+            <Button
+              className="w-full bg-foreground text-background hover:bg-foreground/90 font-semibold py-6"
+              onClick={() => { closeCart(); router.push("/checkout") }}
+            >
               INICIAR COMPRA
             </Button>
             <button 

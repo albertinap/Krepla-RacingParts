@@ -1,20 +1,22 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { X, ChevronRight, Bike, HardHat, Cog, Wrench, Shield, Ruler, Sticker, Grip, Package } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { medusa } from "@/lib/medusa"
 
-const categories = [
-  { name: "Escapes", icon: Bike, href: "/productos/escapes" },
-  { name: "Cascos", icon: HardHat, href: "/productos/cascos" },
-  { name: "Transmisión", icon: Cog, href: "/productos/transmision" },
-  { name: "Mantenimiento", icon: Wrench, href: "/productos/mantenimiento" },
-  { name: "Guardabarros", icon: Shield, href: "/productos/guardabarros" },
-  { name: "Rampas y Zunchos", icon: Ruler, href: "/productos/rampas-zunchos" },
-  { name: "Calcos", icon: Sticker, href: "/productos/calcos" },
-  { name: "Manubrios y Accesorios", icon: Grip, href: "/productos/manubrios" },
-  { name: "Kit Plásticos", icon: Package, href: "/productos/kit-plasticos" },
-]
+const categoryIcons: Record<string, any> = {
+  "Escapes": Bike,
+  "Cascos": HardHat,
+  "Transmisión": Cog,
+  "Mantenimiento": Wrench,
+  "Guardabarros": Shield,
+  "Rampas y Zunchos": Ruler,
+  "Calcos": Sticker,
+  "Manubrios y Accesorios": Grip,
+  "Kit Plásticos": Package,
+}
 
 interface CategorySidebarProps {
   isOpen: boolean
@@ -22,43 +24,37 @@ interface CategorySidebarProps {
 }
 
 export function CategorySidebar({ isOpen, onClose }: CategorySidebarProps) {
+  const [categories, setCategories] = useState<any[]>([])
+
+  useEffect(() => {
+    medusa.store.category.list().then(({ product_categories }) => {
+      setCategories(product_categories)
+    })
+  }, [])
+
   return (
     <>
-      {/* Overlay */}
       {isOpen && (
-        <div
-          className="fixed inset-0 bg-black/60 z-40"
-          onClick={onClose}
-        />
+        <div className="fixed inset-0 bg-black/60 z-40" onClick={onClose} />
       )}
 
-      {/* Sidebar */}
-      <div
-        className={`fixed top-0 left-0 h-full w-72 bg-sidebar z-50 transform transition-transform duration-300 ease-in-out ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        {/* Header */}
+      <div className={`fixed top-0 left-0 h-full w-72 bg-sidebar z-50 transform transition-transform duration-300 ease-in-out ${
+        isOpen ? "translate-x-0" : "-translate-x-full"
+      }`}>
         <div className="bg-primary px-4 py-4 flex items-center justify-between">
           <span className="text-primary-foreground font-semibold">Todas Las Categorías</span>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onClose}
-            className="text-primary-foreground hover:bg-primary/80"
-          >
+          <Button variant="ghost" size="icon" onClick={onClose} className="text-primary-foreground hover:bg-primary/80">
             <X className="h-5 w-5" />
           </Button>
         </div>
 
-        {/* Categories List */}
         <div className="py-2">
           {categories.map((category) => {
-            const Icon = category.icon
+            const Icon = categoryIcons[category.name] || Package
             return (
               <Link
-                key={category.name}
-                href={category.href}
+                key={category.id}
+                href={`/productos/${category.handle}`}
                 className="flex items-center justify-between px-4 py-3 text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
                 onClick={onClose}
               >
